@@ -1,136 +1,108 @@
-import React, { useRef, useState } from "react";
-import Icons from "./Icon";
+import React, { useState } from "react";
 
 export default function UserList() {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState([]);
   const [menuOpen, setMenuOpen] = useState(true);
 
-  const inputRef = useRef(null);
-
-  const tags = [
-    "Tutorial",
-    "HowTo",
-    "DIY",
-    "Review",
-    "Tech",
-    "Gaming",
-    "Travel",
-    "Fitness",
-    "Cooking",
-    "Vlog",
+  const names = [
+    "John Smith",
+    "Emily Johnson",
+    "Michael Williams",
+    "Ava Jones",
+    "Daniel Brown",
+    "Sophia Davis",
+    "Christopher Miller",
+    "Olivia Wilson",
+    "Matthew Moore",
+    "Emma Taylor",
+    "Ethan Anderson",
+    "Isabella Martinez",
+    "William Jackson",
+    "Amelia Harris",
+    "Alexander Carter",
   ];
 
-  const filteredTags = tags.filter(
+  const filteredTags = names.filter(
     (item) =>
       item?.toLocaleLowerCase()?.includes(query.toLocaleLowerCase()?.trim()) &&
       !selected.includes(item)
   );
-
-  const isDisable =
-    !query?.trim() ||
-    selected.filter(
-      (item) =>
-        item?.toLocaleLowerCase()?.trim() === query?.toLocaleLowerCase()?.trim()
-    )?.length;
   return (
-    <div className="bg-[#eef1f8] h-screen grid place-items-center ">
-      <div className="relative w-80 h-96 text-sm">
-        {selected?.length ? (
-          <div className="bg-white w-80 relative text-xs flex flex-wrap gap-1 p-2 mb-2">
-            {selected.map((tag) => {
+    <div className="w-1/3 mx-auto">
+      <h1 className="text-3xl font-semibold text-center my-12">Pick User</h1>
+      <div>
+        <div className="flex flex-auto flex-wrap border-b-2 border-b-indigo-900">
+          {selected?.length > 0 &&
+            selected.map((name) => {
               return (
-                <div
-                  key={tag}
-                  className="rounded-full w-fit py-1.5 px-3 border border-gray-400 bg-gray-50 text-gray-500
-              flex items-center gap-2"
-                >
-                  {tag}
-                  <div
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() =>
-                      setSelected(selected.filter((i) => i !== tag))
-                    }
-                  >
-                    <Icons.Close />
+                <div className="flex justify-center items-center m-1 font-medium py-1 px-2 bg-blue-200 rounded-full text-teal-700 bg-teal-100 border border-teal-300 ">
+                  <div className="text-xs font-normal leading-none max-w-full flex-initial">
+                    {name}
+                  </div>
+                  <div className="flex flex-auto flex-row-reverse">
+                    <div>
+                      <svg
+                        onClick={() =>
+                          setSelected(selected.filter((i) => i !== name))
+                        }
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="100%"
+                        height="100%"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="feather feather-x cursor-pointer hover:text-teal-400 rounded-full w-4 h-4 ml-2"
+                      >
+                        <line x1={18} y1={6} x2={6} y2={18} />
+                        <line x1={6} y1={6} x2={18} y2={18} />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               );
             })}
-            <div className="w-full text-right">
-              <span
-                className="text-gray-400 cursor-pointer"
-                onClick={() => {
-                  setSelected([]);
-                  inputRef.current?.focus();
-                }}
-              >
-                Clear all
-              </span>
+          <div className="flex-1">
+            <input
+              value={query}
+              type="text"
+              onFocus={() => setMenuOpen(true)}
+              onBlur={() => setMenuOpen(false)}
+              onChange={(e) => setQuery(e.target.value.trimStart())}
+              className="bg-transparent p-1 px-2 outline-none h-full w-full text-gray-800 "
+            />
+          </div>
+        </div>
+        {menuOpen && (
+          <div className="h-64 overflow-auto">
+            <div className="flex flex-col w-full bg-gray-200 ">
+              {filteredTags?.length > 0 &&
+                filteredTags.map((name, i) => {
+                  return (
+                    <div
+                      key={i}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={(e) => {
+                        setMenuOpen(true);
+                        setSelected((prev) => [...prev, name]);
+                        setQuery("");
+                      }}
+                      className="cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-teal-100"
+                    >
+                      <div className="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative hover:border-teal-100">
+                        <div className="w-full items-center flex">
+                          <div className="mx-2 leading-6">{name}</div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
           </div>
-        ) : null}
-        <div className="card flex items-center justify-between p-3 w-80 gap-2.5">
-          <Icons.Search />
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value.trimStart())}
-            placeholder="Search or Create tags"
-            className="bg-transparent text-sm flex-1 caret-rose-600"
-            onFocus={() => setMenuOpen(true)}
-            onBlur={() => setMenuOpen(false)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !isDisable) {
-                setSelected((prev) => [...prev, query]);
-                setQuery("");
-                setMenuOpen(true);
-              }
-            }}
-          />
-          <button
-            className="text-sm disabled:text-gray-300 text-rose-500 disabled:cursor-not-allowed"
-            disabled={isDisable}
-            onClick={() => {
-              if (isDisable) {
-                return;
-              }
-              setSelected((prev) => [...prev, query]);
-              setQuery("");
-              inputRef.current?.focus();
-              setMenuOpen(true);
-            }}
-          >
-            + Add
-          </button>
-        </div>
-
-        {/* Menu's */}
-        {menuOpen ? (
-          <div className="card absolute w-full max-h-52 mt-2 p-1 flex overflow-y-auto scrollbar-thin scrollbar-track-slate-50 scrollbar-thumb-slate-200">
-            <ul className="w-full">
-              {filteredTags?.length ? (
-                filteredTags.map((tag, i) => (
-                  <li
-                    key={tag}
-                    className="p-2 cursor-pointer hover:bg-rose-50 hover:text-rose-500 rounded-md w-full"
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => {
-                      setMenuOpen(true);
-                      setSelected((prev) => [...prev, tag]);
-                      setQuery("");
-                    }}
-                  >
-                    {tag}
-                  </li>
-                ))
-              ) : (
-                <li className="p-2 text-gray-500">No options available</li>
-              )}
-            </ul>
-          </div>
-        ) : null}
+        )}
       </div>
     </div>
   );
