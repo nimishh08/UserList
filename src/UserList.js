@@ -36,7 +36,7 @@ export default function UserList() {
           {selected?.length > 0 &&
             selected.map((name) => {
               return (
-                <div className="flex justify-center items-center m-1 font-medium py-1 px-2 bg-blue-200 rounded-full text-teal-700 bg-teal-100 border border-teal-300 ">
+                <div className="flex justify-center items-center m-1 font-medium py-1 px-2 bg-blue-200 rounded-full text-teal-700 border border-teal-300 ">
                   <div className="text-xs font-normal leading-none max-w-full flex-initial">
                     {name}
                   </div>
